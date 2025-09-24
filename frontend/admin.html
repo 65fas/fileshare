@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Panel</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      font-size: 16px;
+      line-height: 1.5;
+      color: #333;
+    }
+    h1 {
+      color: #2c3e50;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    button {
+      background-color: #3498db;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      margin: 10px 0;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #2980b9;
+    }
+    #filesList {
+      margin-top: 20px;
+    }
+    .file-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      background-color: #f9f9f9;
+    }
+    .file-name {
+      flex-grow: 1;
+    }
+    .delete-btn {
+      background-color: #e74c3c;
+      padding: 5px 10px;
+      font-size: 14px;
+    }
+    .delete-btn:hover {
+      background-color: #c0392b;
+    }
+    #status {
+      margin-top: 20px;
+      padding: 10px;
+      border-radius: 5px;
+      text-align: center;
+    }
+    .success {
+      background-color: #d4edda;
+      color: #155724;
+    }
+    .error {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+  </style>
+</head>
+<body>
+  <h1>Admin Panel</h1>
+  <button id="listFiles">Refresh Files</button>
+  <div id="filesList"></div>
+  <div id="status"></div>
+
+  <script>
+    const listFilesBtn = document.getElementById('listFiles');
+    const filesList = document.getElementById('filesList');
+    const statusDiv = document.getElementById('status');
+
+    listFilesBtn.addEventListener('click', async () => {
+      showStatus('Loading files...', '');
+      try {
+        const response = await fetch('/api/files');
+        const files = await response.json();
+        renderFiles(files);
+        showStatus('Files loaded.', 'success');
+      } catch (err) {
+        console.error('Error loading files:', err);
+        showStatus('Failed to load files. Check console for details.', 'error');
+      }
+    });
+
+    async function deleteFile(fileName) {
+      try {
+        const response = await fetch(`/api/files/${fileName}`, { method: 'DELETE' });
+        if (response.ok) {
+          showStatus('File deleted!', 'success');
+          listFilesBtn.click();
+        } else {
+          showStatus('Failed to delete file.', 'error');
+        }
+      } catch (err) {
+        console.error('Error deleting file:', err);
+        showStatus('Failed to delete file. Check console for details.', 'error');
+      }
+    }
+
+    function renderFiles(files) {
+      filesList.innerHTML = '';
+      if (files.length === 0) {
+        filesList.innerHTML = '<div class="file-item">No files found.</div>';
+        return;
+      }
+      files.forEach(file => {
+        const fileItem = document.createElement('div');
+        fileItem.className = 'file-item';
+        fileItem.innerHTML = `
+          <span class="file-name">${file.fileName}</span>
+          <button class="delete-btn" onclick="deleteFile('${file.fileName}')">Delete</button>
+        `;
+        filesList.appendChild(fileItem);
+      });
+    }
+
+    function showStatus(message, type) {
+      statusDiv.textContent = message;
+      statusDiv.className = type;
+    }
+
+    // Load files on page load
+    listFilesBtn.click();
+  </script>
+</body>
+</html>
+

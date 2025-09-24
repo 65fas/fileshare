@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Upload File</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      font-size: 16px;
+      line-height: 1.5;
+      color: #333;
+    }
+    h1 {
+      color: #2c3e50;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .upload-container {
+      border: 2px dashed #ccc;
+      padding: 20px;
+      border-radius: 5px;
+      text-align: center;
+      margin-bottom: 20px;
+      background-color: #f9f9f9;
+    }
+    #fileInput {
+      display: none;
+    }
+    .upload-btn {
+      background-color: #3498db;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      margin: 10px 0;
+      transition: background-color 0.3s;
+    }
+    .upload-btn:hover {
+      background-color: #2980b9;
+    }
+    #status {
+      margin-top: 20px;
+      padding: 10px;
+      border-radius: 5px;
+      text-align: center;
+    }
+    .success {
+      background-color: #d4edda;
+      color: #155724;
+    }
+    .error {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+    .file-name {
+      margin-top: 10px;
+      font-style: italic;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <h1>Upload File</h1>
+  <div class="upload-container">
+    <label for="fileInput" id="fileLabel">Choose a file or drag it here</label>
+    <input type="file" id="fileInput" name="file" required>
+    <div id="fileName" class="file-name">No file selected</div>
+    <button class="upload-btn" id="uploadBtn">Upload</button>
+  </div>
+  <div id="status"></div>
+
+  <script>
+    const fileInput = document.getElementById('fileInput');
+    const fileLabel = document.getElementById('fileLabel');
+    const fileNameDisplay = document.getElementById('fileName');
+    const uploadBtn = document.getElementById('uploadBtn');
+    const statusDiv = document.getElementById('status');
+
+    fileInput.addEventListener('change', (e) => {
+      if (e.target.files.length > 0) {
+        fileNameDisplay.textContent = e.target.files[0].name;
+      } else {
+        fileNameDisplay.textContent = 'No file selected';
+      }
+    });
+
+    uploadBtn.addEventListener('click', async () => {
+      const formData = new FormData();
+      if (fileInput.files.length === 0) {
+        showStatus('No file selected.', 'error');
+        return;
+      }
+      formData.append('file', fileInput.files[0]);
+
+      const uploadId = window.location.pathname.split('/').pop();  // Token from URL
+      showStatus('Uploading...', '');
+
+      try {
+        const response = await fetch(`/api/upload/${uploadId}`, {
+          method: 'POST',
+          body: formData
+        });
+        const result = await response.text();
+        showStatus(result, response.ok ? 'success' : 'error');
+      } catch (err) {
+        console.error('Upload error:', err);
+        showStatus('Upload failed. Check console for details.', 'error');
+      }
+    });
+
+    function showStatus(message, type) {
+      statusDiv.textContent = message;
+      statusDiv.className = type;
+    }
+  </script>
+</body>
+</html>
+
