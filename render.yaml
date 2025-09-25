@@ -16,5 +16,6 @@ services:
       - key: B2_BUCKET_NAME
         sync: false
       - key: VALID_TOKENS
-        value: "abc123,x
-
+        value: "abc123,xyz789,test123"
+      - key: PYTHONPATH
+        value: "/opt/render/project/src"
