@@ -8,7 +8,7 @@ services:
       - key: FLASK_ENV
         value: production
       - key: B2_KEY_ID
-        sync: false  # You'll set this in Render's dashboard
+        sync: false
       - key: B2_APPLICATION_KEY
         sync: false
       - key: B2_BUCKET_ID
@@ -16,5 +16,5 @@ services:
       - key: B2_BUCKET_NAME
         sync: false
       - key: VALID_TOKENS
-        value: "abc123,xyz789,test123"  # Your tokens here
+        value: "abc123,x
 
