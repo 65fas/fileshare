@@ -38,3 +38,56 @@ fileshare/
     ├── download_latest_file.py  # Download latest file script
     └── download/         # Downloaded files
 
+---
+
+## Setup Instructions
+
+```bash
+# 1. Clone the Repository
+git clone https://github.com/yourusername/fileshare.git
+cd fileshare
+
+# 2. Install Dependencies
+pip install -r backend/requirements.txt
+
+# 3. Configure Environment Variables
+# Create a `.env` file in the root directory with:
+# ----------------------------
+# B2_KEY_ID=your_backblaze_key_id
+# B2_APPLICATION_KEY=your_backblaze_application_key
+# B2_BUCKET_ID=your_backblaze_bucket_id
+# B2_BUCKET_NAME=your_backblaze_bucket_name
+# VALID_TOKENS=abc123,xyz789,test123
+# FLASK_ENV=development
+# ----------------------------
+
+# 4. Run Locally
+flask run
+
+# Access the app at:
+# Upload Page: http://localhost:5000/upload/abc123
+# Admin Panel: http://localhost:5000/admin
+
+# 5. Deploy to Render
+# Push to GitHub:
+git add .
+git commit -m "Ready for deployment"
+git push origin main
+
+# Render Configuration:
+# ----------------------------
+# Build Command: pip install -r backend/requirements.txt
+# Start Command: gunicorn --bind 0.0.0.0:10000 backend.app\:app
+# Environment Variables:
+#   B2_KEY_ID=your_backblaze_key_id
+#   B2_APPLICATION_KEY=your_backblaze_application_key
+#   B2_BUCKET_ID=your_backblaze_bucket_id
+#   B2_BUCKET_NAME=your_backblaze_bucket_name
+#   VALID_TOKENS=abc123,xyz789,test123
+#   FLASK_ENV=production
+#   PYTHONPATH=/opt/render/project/src
+# ----------------------------
+
+# 6. Test Deployment
+# Open your Render URL (e.g., https://your-app.onrender.com/upload/abc123)
+# Verify uploads and admin features work
