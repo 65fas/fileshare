@@ -15,7 +15,7 @@ limiter = Limiter(
 )
 
 # Valid tokens (manually defined)
-VALID_TOKENS = {"abc123", "xyz789", "test123"}  # Add your tokens here
+VALID_TOKENS = set(os.getenv("VALID_TOKENS", "").split(","))
 
 # Serve frontend files
 @app.route('/')
