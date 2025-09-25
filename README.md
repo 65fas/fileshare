@@ -19,17 +19,22 @@ Users can upload files via a web interface, and admins can manage files with tok
 ---
 
 ## **Project Structure**
+```text
 fileshare/
 ├── .env                  # Environment variables
 ├── .gitignore            # Ignored files
-├── README.md             # This file
+├── README.md             # Project documentation
 ├── b2_utils.py           # Backblaze B2 utility functions
 ├── backend/
-│   ├── app.py            # Flask backend
+│   ├── app.py            # Flask backend logic
 │   └── requirements.txt  # Python dependencies
 ├── frontend/
-│   ├── upload.html       # Upload page
-│   ├── admin.html        # Admin page
-│   └── static/           # Static files (CSS/JS)
-├── render.yaml           # Render deployment config
-└── test/                 # Test scripts
+│   ├── upload.html       # File upload interface
+│   ├── admin.html        # Admin panel
+│   └── static/           # Static assets (CSS/JS)
+├── render.yaml           # Render deployment configuration
+└── test/
+    ├── test-b2.py        # Backblaze B2 test script
+    ├── download_latest_file.py  # Download latest file script
+    └── download/         # Downloaded files
+
